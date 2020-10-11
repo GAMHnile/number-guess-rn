@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Button, Alert } from "react-native";
+import { View, Text, StyleSheet, Alert } from "react-native";
 
 import Card from "../components/Card";
 import NumberContainer from "../components/NumberContainer";
+import MainButton from '../components/MainButton';
 
 const generateRandomNum = (min, max, exclude) => {
   min = Math.ceil(min);
@@ -56,8 +57,8 @@ const GameScreen = (props) => {
       <Text>Oponents guess:</Text>
       <NumberContainer>{currentGuess}</NumberContainer>
       <Card style={styles.buttonContainer}>
-        <Button title="LOWER" onPress={guessNextNumber.bind(this, "lower")} />
-        <Button title="HIGHER" onPress={guessNextNumber.bind(this, "higher")} />
+        <MainButton onPress={guessNextNumber.bind(this, "lower")} >LOWER</MainButton>
+        <MainButton onPress={guessNextNumber.bind(this, "higher")}>HIGHER</MainButton>
       </Card>
     </View>
   );

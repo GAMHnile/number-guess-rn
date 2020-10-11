@@ -9,6 +9,8 @@ import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
 
+
+
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
@@ -50,14 +52,14 @@ export default function App() {
   } else if (!!rounds) {
     content = <GameOverScreen numRounds={rounds} userNumber={userNumber} onRestart={restartGameHandler} />
   }
-  //content = <GameOverScreen numRounds={2} userNumber={22} onRestart={restartGameHandler} />
+  
   return (
     <View style={styles.screen}>
       <Header title="Guess the number" />
       {content}
     </View>
   );
-}
+}    
 
 const styles = StyleSheet.create({
   screen: {
