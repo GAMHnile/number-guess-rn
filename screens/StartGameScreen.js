@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   button: { width: 80 },
-  input: { width: 20 },
+  input: { width: 25 },
   summaryContainer: {
     marginTop: 20,
     alignItems: "center",
