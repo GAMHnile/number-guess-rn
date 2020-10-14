@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,6 +7,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Dimensions,
+  ScrollView,
+  KeyboardAvoidingView
 } from "react-native";
 
 import Card from "../components/Card";
@@ -22,6 +25,17 @@ const StartGameScreen = (props) => {
   const [enteredNumber, setEnteredNumber] = useState("");
   const [confirmed, setConfirmed] = useState(false);
   const [selectedNumber, setSelectedNumber] = useState();
+  const [buttonWidth, setButtonWidth] = useState(Dimensions.get("window").width / 4);
+
+
+  useEffect(()=>{
+    const updateWidth = ()=>{
+      setButtonWidth(Dimensions.get("window").width / 4);
+    }
+    Dimensions.addEventListener("change", updateWidth);
+
+    return ()=> Dimensions.removeEventListener("change", updateWidth);
+  })
 
   const numberInputHandler = (text) => {
     setEnteredNumber(text.replace(/[^0-9]/g, ""));
@@ -53,49 +67,53 @@ const StartGameScreen = (props) => {
       <Card style={styles.summaryContainer}>
         <Text>You selected: </Text>
         <NumberContainer>{selectedNumber}</NumberContainer>
-        <MainButton onPress={()=>props.onStartGame(selectedNumber)} >START GAME</MainButton>
+        <MainButton onPress={() => props.onStartGame(selectedNumber)} >START GAME</MainButton>
       </Card>
     );
   }
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        Keyboard.dismiss();
-      }}
-    >
-      <View style={styles.screen}>
-        <TitleText style={styles.title}>Start a new game</TitleText>
-        <Card style={styles.inputContainer}>
-          <BodyText>Select a number</BodyText>
-          <Input
-            style={styles.input}
-            blurOnSubmit={true}
-            keyboardType="number-pad"
-            maxLength={2}
-            onChangeText={numberInputHandler}
-            value={enteredNumber}
-          />
-          <View style={styles.ButtonContainer}>
-            <View style={styles.button}>
-              <Button
-                title="Cancel"
-                onPress={cancelInputHandler}
-                color={colors.secondary}
+    <ScrollView>
+      <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={30} >
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={styles.screen}>
+            <TitleText style={styles.title}>Start a new game</TitleText>
+            <Card style={styles.inputContainer}>
+              <BodyText>Select a number</BodyText>
+              <Input
+                style={styles.input}
+                blurOnSubmit={true}
+                keyboardType="number-pad"
+                maxLength={2}
+                onChangeText={numberInputHandler}
+                value={enteredNumber}
               />
-            </View>
-            <View style={styles.button}>
-              <Button
-                title="Confirm"
-                onPress={confirmInputHandler}
-                color={colors.primary}
-              />
-            </View>
+              <View style={styles.ButtonContainer}>
+                <View style={{width: buttonWidth}}>
+                  <Button
+                    title="Cancel"
+                    onPress={cancelInputHandler}
+                    color={colors.secondary}
+                  />
+                </View>
+                <View style={{width: buttonWidth}}>
+                  <Button
+                    title="Confirm"
+                    onPress={confirmInputHandler}
+                    color={colors.primary}
+                  />
+                </View>
+              </View>
+            </Card>
+            {confirmedOutput}
           </View>
-        </Card>
-        {confirmedOutput}
-      </View>
-    </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
+    </ScrollView>
   );
 };
 
@@ -111,8 +129,9 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: "center",
-    width: 300,
-    maxWidth: "80%",
+    width: "80%",
+    minWidth: 300,
+    maxWidth: "95%",
   },
   ButtonContainer: {
     flexDirection: "row",
@@ -120,7 +139,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
   },
-  button: { width: 80 },
+  //button: { width: Dimensions.get("window").width / 4 },
   input: { width: 25 },
   summaryContainer: {
     marginTop: 20,
